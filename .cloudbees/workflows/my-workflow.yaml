@@ -1,0 +1,42 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: Meridian Release v1.0
+on:
+  workflow_dispatch:
+metadata:
+  stages/v1alpha1:
+    - name: Staging
+      jobs:
+        - deploy-staging
+    - name: Approval
+      jobs:
+        - production-gate
+    - name: Production
+      jobs:
+        - deploy-production
+jobs:
+  deploy-staging:
+    environment: Staging
+    steps:
+      - uses: cloudbees-io/checkout@v1
+      - name: Deploy to Staging
+        uses: docker://alpine:latest
+        run: echo "Deploying Meridian Payment Platform to Staging"
+        kind: deploy
+  production-gate:
+    needs: deploy-staging
+    timeout-minutes: 4320
+    delegates: cloudbees-io/manual-approval/custom-job.yml@v1
+    with:
+      instructions: Review staging deployment results before approving production release
+      disallowLaunchByUser: true
+      approvers: 867a7f5a-0b69-11f0-acd9-42010a83ae38
+      notifyAllEligibleUsers: false
+  deploy-production:
+    needs: production-gate
+    environment: Production
+    steps:
+      - name: Deploy to Production
+        uses: docker://alpine:latest
+        run: echo "Deploying Meridian Payment Platform to Production"
+        kind: deploy
