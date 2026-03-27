@@ -21,7 +21,7 @@ metadata:
         - deploy-production
 jobs:
   deploy-staging:
-    environment: Staging
+    environment: Demo-Staging
     steps:
       - uses: cloudbees-io/checkout@v1
       - name: Deploy to Staging
@@ -43,7 +43,7 @@ jobs:
       notifyAllEligibleUsers: false
   deploy-production:
     needs: production-gate
-    environment: Production
+    environment: Demo-Production
     steps:
       - name: Deploy to Production
         uses: docker://alpine:latest
