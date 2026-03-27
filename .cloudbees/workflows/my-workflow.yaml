@@ -39,8 +39,8 @@ jobs:
     with:
       instructions: Review staging deployment results before approving production release
       disallowLaunchByUser: true
-      approvers: 867a7f5a-0b69-11f0-acd9-42010a83ae38,657dde70-df5c-11ef-9645-42010a1cd42f
       notifyAllEligibleUsers: false
+      approvers: dd5066ee-176d-11f1-a00c-42010a83ae62,ac107a88-03d2-11eb-9d67-42010a83ae35
   deploy-production:
     needs: production-gate
     environment: Demo-Production
